@@ -1,0 +1,81 @@
+---
+title: "Task2"
+author: "Hannah Cope"
+date: "9/2/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+install.packages("knitr")
+install.packages("tidyverse")
+```
+
+### Step 1
+```{r}
+pi / 4
+```
+
+### Step 2
+```{r}
+x <- 10/3
+x
+# Most names are allowed, but they cannot start with numbers. They must start with a letter or a dot. They also cannot be keywods as names. Some of these include "break", "else", "FALSE", "for", "next", and many more. 
+```
+
+### Step 3
+```{r}
+MySequence <- seq(1, 50, by=8)
+MySequence
+```
+
+### Step 4
+```{r}
+my_vector <- c(1,5,12,31,19)
+my_vector
+```
+
+### Step 5
+```{r}
+7 + 5 == 12
+# The "==" sign means that the output is going to print whether the answer is TRUE or FALSE.
+```
+
+### Step 6
+```{r}
+(7 + 4 == 12) | (5 - 4 == 1)
+# The original equation did not work becasuse 7 + 4 does not equal 12. Instead I would have to change the equal signs to "==" so that it could tell me that the equation was wrong instead of giving me an error.
+```
+
+### Step 7
+```{r}
+# 1 does not work because when they went to print it, they have a type-o.
+```
+
+```{r}
+library(tidyverse)
+
+ggplot(dota = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy))
+
+fliter(mpg, cyl = 8)
+filter(diamond, carat > 3)
+```
+
+```{r}
+library(tidyverse)
+
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy))
+
+filter(mpg, cyl == 8)
+filter(diamonds, carat > 3)
+```
+
+```{r}
+# For number 3, when you press these keys you will get the keyboard shortcut.
+```
+
