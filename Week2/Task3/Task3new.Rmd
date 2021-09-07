@@ -1,0 +1,49 @@
+title: "Task3"
+author: "Hannah Cope"
+date: "9/5/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### #1
+```{r}
+ggplot(data = iris) +
+  geom_point(mapping = aes(x = Sepal.Length, y = Sepal.Width, shape = Species, color = Species)) 
+```
+##### Q: Which flower has the speal with largest width, but the smaller length?
+##### A: Setosa
+##### The graph helped me determine this becasue the Setosa data, though wasthe highest on the plot, it was the furthest to the left. This was very easy to see becasue of the different colored and shaped data points.
+
+### #2
+```{r}
+ggplot(data = iris) +
+  geom_point(mapping = aes(x = Petal.Width, y = Petal.Length, shape = Species, color = Species)) +
+  facet_wrap(~ Species, nrow = 1)
+```
+##### Q: Which flower tends to have the largest petals?
+##### A: Virginica
+##### I was able to tell this very easily when I split up the data by Species. The Virginica points were higher and urther to the right and the other flowers. 
+
+### #3
+```{r}
+ggplot(data = iris) +
+  geom_point(mapping = aes(x = Petal.Length, y = Petal.Width, shape = Species, color = Species)) +
+  geom_smooth(method = "lm", mapping = aes(x = Petal.Length, y = Petal.Width))
+```
+##### Q: Which is the flower with the most similiar sized petals?
+##### A: Setosa
+##### I was able to know this beacuse this graph has a line of best fit, and the points for the petal width and length of the setosa were all the closest to this line. There are not any crazy outliers in the setosa data and they are all fairly bunched together. 
+
+### #4
+```{r}
+ggplot(data = iris, aes(x = Sepal.Length, fill = Species)) +
+  geom_bar(color = "black", stat = "bin", bins = 19) +
+  geom_vline(aes(xintercept = mean(Sepal.Length)), linetype = "dashed", color = "grey")
+```
+##### Q: What is the most commen sepal length?
+##### A: 5
+##### I knew this becasue the sepal length of 5 had the most counts. I can also tell that this length is most commonly found in Setosa based off of the colors of the plot.
+
