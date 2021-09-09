@@ -3,7 +3,7 @@ library(tibble)
 
 #Convert the iris data to a tibble called iris_data.
 iris_data <- tibble(iris)
-iris_data
+iris_data 
 
 #Arrange the iris data by Sepal.Length and display the first ten rows.
 sepal_length <- arrange(iris_data, Sepal.Length)
