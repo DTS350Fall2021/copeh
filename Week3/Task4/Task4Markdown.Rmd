@@ -64,6 +64,8 @@ Mean_Sd_ForallSpecies
 #Emma - 3 hrs
 #Dawsyn - 4-5 hrs
 
+#It was interesting seeing what different people said because the athletes that I asked said that you needed more exercise per week compared to the non-athletes that I asked. 
+
 #2. Do you notice a difference in mental performance when you do not eat 3 meals a day?
 
 #Gillian - Yes
@@ -72,6 +74,8 @@ Mean_Sd_ForallSpecies
 #Emma - No
 #Dawsyn - No
 
+#A lot of the times that people said no they said that though they do not feel different if they don't get 3 meals, they said that the type of food they eat will effect them more.
+
 #3. What are ways you could increase life expectancy?
 
 #Gillian - Taking care of your mental health
@@ -79,5 +83,7 @@ Mean_Sd_ForallSpecies
 #Evan - Focusing on good nutrition
 #Emma - Avoiding nicotine and tobacco
 #Dawsyn - Drink lots of water and have a positive mindset
+
+#These are all of the basic answers, but all together these would all be good answers if one person were to do all of these.
 ```
 
