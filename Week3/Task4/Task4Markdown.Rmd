@@ -87,3 +87,7 @@ Mean_Sd_ForallSpecies
 #These are all of the basic answers, but all together these would all be good answers if one person were to do all of these.
 ```
 
+For my project I want to do something with sports, and I was think about using volleyball film to figure out how to get the most out of each play.
+
+For example, I could find what percentage of time the hitter gets a kill in different situations.
+Ex: 3 pass, perfect set... 2 pass, perfect set... 1 pass perfect set... 3 pass, bad set... 2 pass, bad set... 1 pass, bad set.
