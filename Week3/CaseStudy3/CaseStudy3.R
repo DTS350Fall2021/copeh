@@ -23,6 +23,7 @@ weighted_avg <- life_data %>%
   summarise(average = weighted.mean(gdpPercap), population = pop/10000)
 weighted_avg
 
+?gapminder
 ggplot(data = life_data, mapping = aes(x = year, y = gdpPercap)) +
   geom_point(data = life_data, mapping = aes(color = continent)) +
   geom_line(data = life_data, mapping = aes(color = continent, group = country)) +
@@ -33,3 +34,4 @@ ggplot(data = life_data, mapping = aes(x = year, y = gdpPercap)) +
   ylab("GDP Per Capita") +
   scale_size_continuous(name = "Population (100k)", breaks = c(10000, 20000, 30000)) +
   theme_bw()
+
