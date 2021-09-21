@@ -1,0 +1,52 @@
+---
+title: "CaseStudy4"
+author: "Hannah Cope"
+date: "9/20/2021"
+output: 
+  html_document:
+    theme: cosmo
+    keep_md: True
+    code_folding: 'hide'
+---
+
+### Load Packages
+```{r}
+library(nycflights13)
+library(tidyverse)
+library(ggrepel)
+```
+
+#### 2. Which origin airport is best to minimize my chances of a late arrival when I am using Delta Airline?
+```{r Select only Delta Airlines data}
+lowest_late_arrival <- flights %>%
+  filter(carrier == "DL")
+lowest_late_arrival
+```
+
+```{r}
+ggplot(data = lowest_late_arrival, mapping = aes(x = sched_arr_time, y = arr_delay, color = origin)) + 
+  geom_point() +
+  labs(x = "Scheduled Arrival Time",
+       y = "Arrival Delay")
+```
+#### This plot shows that the JFK origin is most likely the best to minimize the chances of a late arrival time with Delta Airlines. This airport seems to have the most flights that arrived before the scheduled arrival time.
+
+#### 3. Which destination airport is the worst airport for arrival time?
+```{r Find the average delay time fro each airport}
+delay <- flights %>%
+  group_by(origin) %>%
+  summarise(
+    avg_delay = mean(arr_delay, na.rm = TRUE))
+delay
+```
+
+```{r}
+ggplot(data = flights, aes(x = origin, y = arr_delay)) +
+  geom_point(aes(color = origin)) +
+  geom_point(data = delay, aes(y = avg_delay, size = 1)) +
+  annotate("text", x = c(1.2,2.2,3.2), y = 10, label = c("9.11", "5.55", "5.78")) +
+  labs(x = "Destination Airport", 
+       y = "Arrival Delay") +
+  theme(legend.position = "none")
+```
+#### This plot shows that airport EWR has the worst arrival times. I was able to find the average arrival time for each airport and EWR ended up being the highest by almost double the amount of minutes as the other two airports.
