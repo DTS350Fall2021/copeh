@@ -1,0 +1,51 @@
+---
+title: "Task6Markdown"
+author: "Hannah Cope"
+date: "9/16/2021"
+output: 
+  html_document:
+    theme: cosmo
+    keep_md: True
+    code_folding: 'hide'
+---
+
+### Load Packages
+```{r}
+library(lubridate)
+library(tidyverse)
+library(downloader)
+library(readxl)
+```
+
+```{r Finding the largest pedal length and width for each flower}
+largest_petal_legnth <- iris %>%
+  group_by(Species) %>%
+  filter(row_number(desc(Petal.Length)) == 1)
+
+largest_petal_width <- iris %>%
+  group_by(Species) %>%
+  filter(row_number(desc(Petal.Width)) == 1)
+```
+
+
+### Plot 1
+```{r}
+ggplot(data = iris, mapping = aes(x = Sepal.Length,
+                                  y = Sepal.Width)) +
+  geom_point(aes(color= Species, shape = Species)) +
+  geom_point(size = 3, shape = 1, color = "black", data = largest_petal_legnth) +
+  geom_text(aes(color = Species, label = "Largest Petal Length"), data = largest_petal_legnth, nudge_y = -0.015) +
+  geom_point(size = 3, shape = 1, color = "black", data = largest_petal_width) +
+  geom_text(aes(color = Species, label = "Largest Petal Width"), data = largest_petal_width, nudge_y = 0.015) +
+  scale_y_log10() +
+  labs(x = "Sepal Length (cm)",
+       y = "Sepal Width (cm)",
+       title = "Different Iris Species Have Different Sepal Sizes",
+       subtitle = "The Largest Petal Sizes For Each Species Do Not Correspond To The Largest Sepal Sizes") +
+  theme(legend.position = "bottom")
+```
+
+
+
+
+
