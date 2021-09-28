@@ -171,8 +171,7 @@ SeasonsData <- guns %>%
              month >= 3 & month <= 5 ~ "Spring",
              month >= 6 & month <= 8 ~ "Summer",
              month >= 9 & month <= 11 ~ "Fall",
-             month >= 1 & month <= 2 ~ "Winter",
-             month == 12 ~ "Winter"))
+             month <= 2 | month == 12 ~ "Winter"))
 ```
 
 #### Plot showing the relationship between intent and race througout each season

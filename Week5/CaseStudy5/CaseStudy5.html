@@ -298,8 +298,7 @@ pal</code></pre>
              month &gt;= 3 &amp; month &lt;= 5 ~ &quot;Spring&quot;,
              month &gt;= 6 &amp; month &lt;= 8 ~ &quot;Summer&quot;,
              month &gt;= 9 &amp; month &lt;= 11 ~ &quot;Fall&quot;,
-             month &gt;= 1 &amp; month &lt;= 2 ~ &quot;Winter&quot;,
-             month == 12 ~ &quot;Winter&quot;))</code></pre>
+             month &lt;= 2 | month == 12 ~ &quot;Winter&quot;))</code></pre>
 </div>
 <div id="plot-showing-the-relationship-between-intent-and-race-througout-each-season" class="section level4">
 <h4>Plot showing the relationship between intent and race througout each season</h4>
