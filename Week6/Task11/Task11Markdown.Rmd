@@ -1,0 +1,40 @@
+---
+title: "Task 11 Markdown"
+author: "Hannah Cope"
+date: "9/30/2021"
+output: 
+  html_document:
+    keep_md: True
+    code_folding: 'hide'
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Load Packages
+```{r}
+library(devtools)
+library(tidyverse)
+library(ourworldindata)
+```
+
+### Child Mortality Plot
+```{r}
+new_financing <- financing_healthcare %>%
+  filter(continent != "", child_mort != "", year >= "1850")
+# Filter out the NA values for continents and child mortality, and only use the data efter 1850 to minimize the amount of data we are looking at. I did this because there was not much change in the data before 1850.
+
+ggplot(data = new_financing, aes(x = year, y = child_mort, color = continent)) +
+  geom_point() +
+  geom_smooth(method = "gam", color = "black") +
+  scale_color_brewer(palette = "Set2") +
+  facet_wrap(~ continent, nrow = 3, scale = 'free') +
+  theme_bw() + 
+  theme(legend.position = 'none') +
+  labs(x = "Year",
+        y = "Child Mortality \n(Children 5 and Younger)",
+        title = "Child Mortality of Each Continent",
+        subtitle = "There is an obvious drop in child mortality rates for each of the continents around \nthe years of 1920-1930. This could be because new medicines and technology had \nbeen developed to prevent this issue.")
+```
+From this plot I am able to tell that the child mortality began to decline in around 1925. The geom_smooth line that I added into the graph made it easy to see the downward slop of these graphs and about where it started to decline. This decline could be due to the advancement in technology and new medicines. Children are getting proper nutrition and medical care that they would need if they become sick at a young age. Hospitals and doctors are more trained and prepared to help this children to the best of their abilities. It was interesting to see the drop in child mortality across the different continents. I was not surprised to see that Africa has the highest number in the late 1800's, but I was surprised to see that the Americas numbers did not drop as quickly as I would have thought. 
