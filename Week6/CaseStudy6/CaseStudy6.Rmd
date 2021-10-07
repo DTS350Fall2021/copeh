@@ -151,7 +151,7 @@ smallplot <- ggplot(data = small, aes(x = price)) +
 
 grid.arrange(largeplot, smallplot, nrow = 1)
 ```
-There are clearly a lot more small diamonds than there are large, but from this data I can tell that the smaller the diamond the lower the price. The prices of larger diamonds begins at the maximum price for a smaller diamond. This is what I expected. 
+There are clearly a lot more small diamonds than there are large, but from this data I can tell that the smaller the diamond the lower the price. The prices of larger diamonds begins at the maximum price for a smaller diamond. This is what I expected.  
 
 ### Combined Plot of Carat, Cut, and Price
 ```{r}
