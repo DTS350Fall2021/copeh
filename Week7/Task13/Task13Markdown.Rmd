@@ -1,0 +1,108 @@
+---
+title: "Task 13"
+author: "Hannah Cope"
+date: "10/19/2021"
+output: 
+  html_document:
+    code_folding: 'hide'
+    keep_m: TRUE
+---
+
+#### Load Packages
+```{r}
+library(tidyverse)
+library(downloader)
+library(readxl)
+library(haven)
+library(ggbeeswarm)
+```
+
+#### Load Data
+```{r}
+data1 <- read_rds(url("https://github.com/WJC-Data-Science/DTS350/raw/master/Dart_Expert_Dow_6month_anova/Dart_Expert_Dow_6month_anova.RDS"))
+data2 <- read_dta(url("https://github.com/WJC-Data-Science/DTS350/raw/master/Dart_Expert_Dow_6month_anova/Dart_Expert_Dow_6month_anova.dta"))
+data3 <- read_csv(url("https://raw.githubusercontent.com/WJC-Data-Science/DTS350/master/Dart_Expert_Dow_6month_anova/Dart_Expert_Dow_6month_anova.csv"))
+data4 <- read_sav(url("https://github.com/WJC-Data-Science/DTS350/raw/master/Dart_Expert_Dow_6month_anova/Dart_Expert_Dow_6month_anova.sav"))
+data <- tempfile()
+download("https://github.com/WJC-Data-Science/DTS350/raw/master/Dart_Expert_Dow_6month_anova/Dart_Expert_Dow_6month_anova.xlsx", data, mode = "wb")
+data5 <- read_xlsx(data)
+```
+
+#### Make the data equal eachother
+```{r}
+all_equal(data1, data2, convert = TRUE)
+all_equal(data2, data3, convert = TRUE)
+all_equal(data3, data4, convert = TRUE)
+all_equal(data4, data5, convert = TRUE)
+```
+
+### Plots showing the performance of the different variables
+```{r}
+ggplot(data = data3, aes(x = variable, y = value)) +
+  geom_boxplot() +
+  theme_bw()
+
+ggplot(data = data3, aes(x = variable, y = value)) +
+  geom_jitter() +
+  theme_bw()
+
+ggplot(data = data3, aes(x = variable, y = value)) +
+  geom_boxplot() +
+  geom_quasirandom() +
+  theme_bw()
+
+mean_var <- mean(data3$value)
+
+ggplot(data = data3, aes(x = variable, y = value)) +
+  geom_jitter() +
+  geom_hline(yintercept = mean(mean_var)) +
+  theme_bw()
+```
+
+### Tidy the data
+```{r}
+month_levels = c("January", "February", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December", "Dec.")
+
+new_data <- data3 %>%
+  separate(contest_period, sep = '-', into = c("month", "year")) %>%
+  separate(year, sep = -4, into = c("actual_month", "actual_year")) %>%
+  mutate(actual_month = fct_recode(factor(actual_month, levels = month_levels), 
+                                   "December" = "Dec.", "February" = "Febuary"))
+
+new_data %>%
+  count(actual_month)
+
+write_rds(new_data, "Final_Task_13_Table")
+
+new_data1 <- new_data %>%
+  mutate(half_year = 
+           case_when(
+             actual_month %in% c("January", "February", "March", "April", "May", "June") ~ 1,
+             TRUE ~ 2,
+  )) %>%
+  group_by(actual_year, half_year, variable) %>%
+  summarise(sum_collected = sum(value)) %>%
+  unite(half_year, actual_year, col = "xvalue", sep = "-") %>%
+  mutate(xvalue = factor(xvalue))
+```
+
+### Plot of 6-month returns
+```{r}
+ggplot(data = new_data1, aes(x = xvalue , y = sum_collected, group = variable, color = variable)) +
+  geom_line() +
+  theme_bw() +
+  labs(x = "Years",
+       y = "Sum of Returns Collected")
+```
+
+### Table of DJIA returns
+```{r}
+new_data_DIJA <- new_data %>%
+  filter(variable == "DJIA") %>%
+  select(- month, - variable) %>%
+  arrange(actual_month) %>%
+  pivot_wider(names_from = actual_year, values_from = value) %>%
+  select(actual_month, '1990', everything())
+head(new_data_DIJA)
+```
+
