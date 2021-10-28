@@ -1,0 +1,88 @@
+---
+title: "Case Study 8"
+author: "Hannah Cope"
+date: "10/28/2021"
+output: 
+  html_document:
+    code_folding: 'hide'
+    keep_md: TRUE
+---
+
+#### Load Packages
+```{r}
+library(tidyverse)
+library(stringi)
+```
+
+#### Load in Data
+```{r}
+bible <- read_csv(url("https://github.com/WJC-Data-Science/DTS350/raw/master/bible.csv"))
+names <- read_csv(url("https://github.com/WJC-Data-Science/DTS350/raw/master/Names.csv"))
+```
+
+#### Filter out Old Testament Data and Make it a String
+```{r}
+OldTest <- bible %>%
+  filter(volume_id == 1) %>%
+  select(scripture_text) %>%
+  str_c()
+```
+
+#### Filter out New Testament Data and Make it a String
+```{r}
+NewTest <- bible %>%
+  filter(volume_id == 2) %>%
+  select(scripture_text) %>%
+  str_c()
+```
+
+### Find Savior Names in Old Testament
+```{r}
+OldTest %>%
+  str_extract_all(names$name)
+```
+
+### Find Savior Names in New Testament
+```{r}
+NewTest %>%
+  str_extract_all(names$name)
+```
+
+### Replace Savior Names with Placeholder in order to Split the String and Count the Words Inbetween
+```{r}
+notSaviorNames <- function(df, case) {
+  for (names in names$name) {
+    place_holder <- str_replace_all(df, names, "savior")
+  }
+  split <- str_split(place_holder, "savior")
+  remove_split <- str_remove_all(split, "\n")
+  if (case == "mean") {
+    stri_stats_latex(unlist(remove_split))[[4]] / length(unlist(split))
+  } else {
+    stri_stats_latex(unlist(remove_split)) [[4]]
+  }
+}
+```
+
+### Count the Number of Words Inbetween the Savior Names of the Old Testament
+```{r}
+notSaviorNames(OldTest, "between")
+```
+
+### Count the Number of Words Inbetween the Savior Names of the New Testament
+```{r}
+notSaviorNames(NewTest, "between")
+```
+
+### Find the Mean of the Number of Words Inbetween the Savior Names of the Old Testament
+```{r}
+notSaviorNames(OldTest, "mean")
+```
+
+### Find the Mean of the Number of Words Inbetween the Savior Names of the New Testament
+```{r}
+notSaviorNames(NewTest, "mean")
+```
+
+
+
