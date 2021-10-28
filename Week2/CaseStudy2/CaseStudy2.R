@@ -2,7 +2,6 @@ library(tidyverse)
 
 urlfile = "https://github.com/WJC-Data-Science/DTS350/raw/master/coral.csv"
 mydata <- read_csv(url(urlfile))
-View(mydata)
 
 ggplot(data = mydata, aes(x = Year, y = Value, fill = Event)) +
   facet_wrap(~Entity, nrow = 3, scales = "free") +
