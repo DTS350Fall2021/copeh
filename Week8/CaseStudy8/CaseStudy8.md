@@ -1787,5 +1787,5 @@ notSaviorNames(NewTest, "mean")
 ## [1] 12044.13
 ```
 
-
+I was able to find that there were a lot more words between the Savior Names in the Old Testament than the New Testament. Like in the Task, this could be because the Old Testament was very repetitive and had a lot of parts simplified and minimized in the New Testament. 
 
