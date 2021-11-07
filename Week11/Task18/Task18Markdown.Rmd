@@ -1,0 +1,71 @@
+---
+title: "Task18"
+author: "Hannah Cope"
+date: "11/7/2021"
+output: 
+  html_document:
+    keep_md: True
+    code_folding: 'hide'
+---
+
+#### Load Packages
+```{r}
+library(tidyquant)
+library(tidyverse)
+library(lubridate)
+library(dygraphs)
+library(timetk)
+```
+
+#### Select dates from October 2020 to now
+```{r}
+start <- today() - years(1) - months(1)
+end <- today()
+```
+
+### I chose Google, Netflix, and Amazon
+```{r}
+Mine <- tq_get(c("GOOG", "NFLX", "AMZN"), get = 'stock.prices', from = start, to = end)
+```
+
+### My friend chose Facebook, Apple, and Tesla
+```{r}
+Friend <- tq_get(c("AAPL", "FB", "TSLA"), get = 'stock.prices', from = start, to = end)
+```
+
+### All data
+```{r}
+All <- tq_get(c("AAPL", "NFLX", "AMZN", "GOOG", "FB", "TSLA"), get = 'stock.prices', from = start, to = end)
+```
+
+### Plot of my stocks
+```{r}
+Mine_plot <- Mine %>%
+  select(symbol, date, adjusted) %>%
+  pivot_wider(names_from = symbol, values_from = adjusted) %>%
+  tk_xts(date_var = date)
+
+dygraph(Mine_plot)
+```
+
+### Plot of my friend's stocks
+```{r}
+Friend_plot <- Friend %>%
+  select(symbol, date, adjusted) %>%
+  pivot_wider(names_from = symbol, values_from = adjusted) %>%
+  tk_xts(date_var = date)
+
+dygraph(Friend_plot)
+```
+
+### Plot of both of our stocks
+```{r}
+All_plot <- All %>%
+  select(symbol, date, adjusted) %>%
+  pivot_wider(names_from = symbol, values_from = adjusted) %>%
+  tk_xts(date_var = date)
+
+dygraph(All_plot)
+```
+
+From these plot I am able to tell that the stocks that I picked (Google, Amazon, and Netflix) are doing better than the stocks my friend picked (Apple, Facebook, and Tesla). I wanted to use the dygraph to show this data so that I could easily see which stocks were producing which numbers on a certain date. Amazon if second to last out of the 6 stocks, but my other stocks, Google and Netflix, are pulling up my average stock price whcih is putting me on top of my friend. Apple has the lowest stock prices, and Facebook and Tesla's stock prices are not that high either. Today, my stock price for my best stock (Amazon) is 3518.99, while the stock price for my friend's best stock (Tesla) is 1222.09. 
