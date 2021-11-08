@@ -136,7 +136,15 @@ This should that also all of the businesses have the most sales in July. LeBelle
 ### Plot of Sales per Company
 
 ```r
-ggplot(data = NewSales, aes(x = Name, y = Amount, fill = Name)) +
+NewSales2 <- NewSales %>%
+  group_by(Name) %>%
+  summarise(across(Amount, sum))
+
+
+NewSales2 %>%
+  mutate(Name = as.factor(fct_reorder(Name, Amount))) %>%
+  arrange(desc(Amount)) %>%
+  ggplot(aes(x = Name, y = Amount, fill = Name)) +
   geom_col() +
   theme_bw() +
   theme(legend.position = 'none') +
