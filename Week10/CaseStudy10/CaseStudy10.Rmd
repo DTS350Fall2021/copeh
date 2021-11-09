@@ -1,0 +1,74 @@
+---
+title: "Case Study 10"
+author: "Hannah Cope"
+date: "11/8/2021"
+output: 
+  html_document:
+    code_foling: 'hide'
+    keep_md: True
+---
+
+#### Load Packages
+```{r}
+library(tidyquant)
+library(tidyverse)
+library(lubridate)
+library(dygraphs)
+library(timetk)
+library(ggplot2)
+```
+
+#### Pick different stocks
+```{r}
+tickers_today <- c("CXW", "F", "GM", "JCP", "KR", "WDC", "NKE","T", "WDAY", "WFC", "WMT")
+```
+
+#### Give the date range
+```{r}
+start <- today() - years(5)
+end <- today()
+```
+
+### Stock price information for chosen stocks
+```{r}
+Interact <- tq_get(tickers_today, get = 'stock.prices', from = start, to = end)
+```
+
+### Plot of stock prices for chosen stocks
+```{r}
+Interact_plot <- Interact %>%
+  select(symbol, date, adjusted) %>%
+  pivot_wider(names_from = symbol, values_from = adjusted) %>%
+  tk_xts(date_var = date) 
+
+dygraph(Interact_plot) %>%
+  dyRangeSelector()
+```
+
+### Monthly returns for chosen stocks
+```{r}
+My_monthlyReturns <- Interact %>%
+  group_by(symbol) %>%
+  tq_transmute(adjusted, mutate_fun = monthlyReturn) %>%
+  select(symbol, date, monthly.returns) %>%
+  pivot_wider(names_from = symbol, values_from = monthly.returns) %>%
+  tk_xts(date_var = date)
+
+dygraph(My_monthlyReturns) %>%
+  dyOptions(colors = RColorBrewer::brewer.pal(3, "Set2")) %>%
+  dyRangeSelector()
+```
+
+### Candlestick plot of stock volumes
+```{r}
+Interact %>%
+  ggplot(aes(x = date, y = volume)) +
+  geom_candlestick(aes(open = open, high = high, low = low, close = close)) +
+  labs( y = "Volume",
+        x = "") + 
+  coord_x_date(xlim = c(start, end)) +
+  facet_wrap(~ symbol, scale = "free_y") + 
+  theme_tq()
+```
+
+I chose to make a dygraph for the stock prices so that I could easily compare the different prices of the different stocks. I also added in the dyRangeSelector so that it could look closer at specific dates, such as highs and lows of the stock prices. For example, I was able to look at how the stock prices dropped in March becasue that is whenever COVID started to become a larger issue. I also decided to look into the monthly returns. It was interesting to see that they were so dispersed a year ago, but they are more bunched and similar as the year goes on. Finally, I made a candlestick plot to look at the volumes of the stock prices for the stocks. From this graph I was able to note that Ford, General Motors, Kroger, Nike, Workday, and Walmart had upward trends in volume, so these are probably better ones to invest in.  
