@@ -59,16 +59,15 @@ dygraph(My_monthlyReturns) %>%
   dyRangeSelector()
 ```
 
-### Candlestick plot of stock volumes
+### Line plot of stock volumes
 ```{r}
 Interact %>%
   ggplot(aes(x = date, y = volume)) +
-  geom_candlestick(aes(open = open, high = high, low = low, close = close)) +
+  geom_line() +
   labs( y = "Volume",
         x = "") + 
-  coord_x_date(xlim = c(start, end)) +
   facet_wrap(~ symbol, scale = "free_y") + 
   theme_tq()
 ```
 
-I chose to make a dygraph for the stock prices so that I could easily compare the different prices of the different stocks. I also added in the dyRangeSelector so that it could look closer at specific dates, such as highs and lows of the stock prices. For example, I was able to look at how the stock prices dropped in March becasue that is whenever COVID started to become a larger issue. I also decided to look into the monthly returns. It was interesting to see that they were so dispersed a year ago, but they are more bunched and similar as the year goes on. Finally, I made a candlestick plot to look at the volumes of the stock prices for the stocks. From this graph I was able to note that Ford, General Motors, Kroger, Nike, Workday, and Walmart had upward trends in volume, so these are probably better ones to invest in.  
+I chose to make a dygraph for the stock prices so that I could easily compare the different prices of the different stocks. I also added in the dyRangeSelector so that it could look closer at specific dates, such as highs and lows of the stock prices. For example, I was able to look at how the stock prices dropped in March becasue that is whenever COVID started to become a larger issue. I also decided to look into the monthly returns. It was interesting to see that they were so dispersed a year ago, but they are more bunched and similar as the year goes on. Also, it shows that during COVID, people were losing money in these stocks. Finally, I made a line plot to look at the volumes of the stock prices for the stocks. It was kind of hard to see, but from this graph I was able to note that Ford, and General Motors had upward trends in volume, so these are probably better ones to invest in.  
