@@ -25,7 +25,7 @@ tickers_today <- c("CXW", "F", "GM", "JCP", "KR", "WDC", "NKE","T", "WDAY", "WFC
 
 #### Give the date range
 ```{r}
-start <- today() - years(5)
+start <- today() - years(5) 
 end <- today()
 ```
 
