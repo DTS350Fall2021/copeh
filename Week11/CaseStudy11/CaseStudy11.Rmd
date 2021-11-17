@@ -1,0 +1,93 @@
+---
+title: "Case Study 11"
+author: "Hannah Cope"
+date: "11/16/2021"
+output: 
+  html_document:
+    keep_me: True
+    code_folding: 'hide'
+---
+
+#### Load Packages
+```{r}
+library(sf)
+library(tidyverse)
+library(maps)
+library(lwgeom)
+library(downloader)
+library(dygraphs)
+library(plotly)
+library(gridExtra)
+remotes::install_github("ropensci/USAboundaries")
+remotes::install_github("ropensci/USAboundariesData")
+```
+
+#### Load in Data
+```{r}
+permits_data <- tempfile()
+download("https://raw.githubusercontent.com/WJC-Data-Science/DTS350/master/permits.csv", 
+         permits_data, mode = "wb")
+permits <- read_csv(permits_data)
+```
+
+#### Give the States Code Numbers
+```{r}
+states <- state_codes %>% 
+  mutate(state = as.integer(state_code))
+```
+
+#### Merge the Datasets
+```{r}
+state_permits <- merge(permits, states, by = "state") %>%
+  group_by(state_name,year) %>%
+  summarise(across(value, sum))
+```
+
+### Plot of Total Number of Permits in All States
+```{r}
+All_States <- ggplot(data = state_permits, aes(x = year, y = value/10, color = state_name)) +
+  geom_line() +
+  geom_point() +
+  labs(x = "Year",
+       y = "Number of Permits (per 10)") +
+  theme_bw() +
+  theme(legend.position = 'none') 
+ggplotly(All_States)
+```
+
+### Plot of California Permits
+```{r}
+California <- state_permits %>%
+  filter(state_name == 'California') %>%
+  ggplot(aes(x = year, y = value/100)) +
+  geom_point() +
+  geom_line() +
+  labs(x = 'Year', 
+       y = 'Number of Permits (per 100)') +
+  theme_bw() +
+  theme(legend.position = 'none')
+California
+```
+
+### Plot of DC Permits
+```{r}
+DC <- state_permits %>%
+  filter(state_name == 'District of Columbia') %>%
+  ggplot(aes(x = year, y = value/100)) +
+  geom_point() +
+  geom_line() +
+  labs(x = 'Year', 
+       y = 'Number of Permits (per 100)') +
+  theme_bw() +
+  theme(legend.position = 'none')
+DC
+```
+
+### ComparingCalifornia and DC Plots
+```{r}
+grid.arrange(California, DC, nrow = 2)
+```
+
+I decided to look at the data with line graph because it takes us through time. The plot of all the states shows that Texas, California and Florida have the most permit. Overall, the permit amounts seem to peak around 1985, then drop to low points around 1992, then reach another peak around 2005. Texas seems to drop sooner than the other states.
+
+I then compare the states with the most and least number of permits, California and District of Columbia. These made sense becasue of the overall population of the two areas. It is interesting to see that they are almost flipped. When California reaches their peak, DC hits a lot. When DC hits their peak, California drops. 
