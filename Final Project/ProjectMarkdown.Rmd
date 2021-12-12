@@ -1,0 +1,160 @@
+---
+title: "DTS 350 Project: Volleymetrics"
+author: "Hannah Cope"
+date: "11/10/2021"
+output:  
+  html_document:
+    keep_md: True
+    code_folding: 'hide'
+---
+### 1: How many times does the team get a kill off of different scored passes in serve receive?
+### 2: How many times does the team get a kill off of different scored digs?
+### 3: How is the team's conversion when given freeball, tip, or out of system swing?  
+
+#### Website: https://portal.volleymetrics.hudl.com/#/portal/matches
+#### Volleymetrics is a volleyball film website that breaks down the statistics of the matches. Thousands of teams use this website for filming and statistical purposes. I decided to watch the five matches that the University of Kentucky played in the 2020 NCAA tournament since they were the champions last year. The stats that I used were "Receive", "Dig", "Attack", and "Freeball". With these statistics pulls out, I was able to watch the rallies and rate the passes 1, 2, or 3. Three is a perfect pass where the setter barely has to take a step. Two is a pass that is a couple feet off the net, allowing the setter to easily set at least two of her hitters. One is a pass that is about 15 feet or more off the net, making it very difficult for the setter to put the hitters in good situations. I then found how many kills Kentucky got off of each serve receive pass or dig. This allowed me to see where Kentucky strives or stuggles the most. For question three, I went through the attacks coming from their opponents. I noted if they were tips, out of system balls, or freeballs, and saw if they were able to convert off of these balls. Simple balls like these should almost always be converted to a kill for the team on the receiving end. 
+
+```{r message = FALSE, warning = FALSE}
+library(tidyverse)
+library(readxl)
+library(plotly)
+```
+
+```{r message = FALSE, warning = FALSE}
+Volley <- read_excel("/Users/hannahcope/DTS350ProjectData.xlsx") 
+```
+
+```{r Tidy the Data}
+volleyball <- Volley %>%
+  select(-...4, -...8) %>%
+  mutate('Game_SR' = `Game SR`) %>%
+  mutate('SR_Score' = `SR Score`) %>%
+  mutate('Kills_SR' = `Kill Off SR`) %>%
+  mutate('Game_Dig' = `Game Dig`) %>%
+  mutate('Dig_Score' = `Dig Score`) %>%
+  mutate('Kills_Dig' = `Kil off Dig`) %>%
+  mutate('Game_Conv' = `Came Conv`) %>%
+  mutate('Type' = `Type`) %>%
+  mutate('Converted' = `Converted?`) %>%
+  select(Game_SR, SR_Score, Kills_SR, Game_Dig, Dig_Score, Kills_Dig, Game_Conv, Type, Converted)
+
+Game_levels <- c('vs. Las Vegas (Sectionals)', 'vs. Western Kentucky (Regionals)', 'vs. Purdue (Quarterfinals)', 'vs. Washington (Semifinals)', 'vs. Texas (Finals)')
+```
+
+### Plot of Kills off Serve Receive by Game
+```{r}
+SR_Games <- volleyball %>%
+  mutate(Game_SR = factor(Game_SR, levels = Game_levels)) %>%
+  select(Game_SR, SR_Score, Kills_SR) %>%
+  ggplot(aes(x = SR_Score, fill = Kills_SR)) +
+  geom_bar(position = 'dodge') +
+  facet_wrap(~Game_SR, nrow = 1) +
+  theme_bw() +
+  labs(x = "Serve Recieve Score",
+       y = "Total Swings",
+       title = "Kills Based on Serve Recieve Passing Scores by Game") +
+  scale_fill_discrete(name = "Kill?")
+SR_Games
+```
+
+This plot tells me that when UK gets a perfect pass in serve receive, they almost always get a kill. Serve receive seems to be their strong suite, and where they get most of their points. This results in a good side out percentage. In the game against Purdue, Kentucky needed to convert more of their 3 passes into kills. The team serve received really well that game, but the passes were not used as they should be. 
+
+### Plot of Kills off Digs by Game
+```{r}
+Dig_Games <- volleyball %>%
+  mutate(Game_Dig = factor(Game_Dig, levels = Game_levels)) %>%
+  select(Game_Dig, Dig_Score, Kills_Dig) %>%
+  drop_na(Game_Dig, Dig_Score, Kills_Dig) %>%
+  ggplot(aes(x = Dig_Score, fill = Kills_Dig)) +
+  geom_bar(position = 'dodge') +
+  facet_wrap(~Game_Dig, nrow = 1) +
+  theme_bw() +
+  labs(x = "Dig Score",
+       y = "Total Swings",
+       title = "Kills Based on Dig Scores by Game") +
+  scale_fill_discrete(name = "Kill?")
+Dig_Games
+```
+
+This plot tells me that UK is not getting enough kills in transition. This is normal considering the ball is coming at the defenders a lot faster and is harder to control. I can assume that Washington and Texas got Kentucky in out of system situations a lot of times based on how many 1 passes they had, but Kentucky needs to be better at finding ways to turn those 1 passes into kills. I would suggest they work more on defending attacks so they are able to put their hitters in good positions in transition. This also tells me that UK most likely scores more of their points in serve receive or blocking. 
+
+### Plot of Kills off Freeballs, Tips, and Out of Systems balls by Game
+```{r}
+Convert_Games <- volleyball %>%
+  mutate(Game_Conv = factor(Game_Conv, levels = Game_levels)) %>%
+  select(Game_Conv, Type, Converted) %>%
+  drop_na(Game_Conv, Type, Converted) %>%
+  ggplot(aes(x = Type, fill = Converted)) +
+  geom_bar(position = 'dodge') +
+  facet_wrap(~Game_Conv, nrow = 1) +
+  theme_bw() +
+  labs(x = "Type of Ball Given",
+       y = "Total Swings",
+       title = "Kills When Given a Freeball, Tip, or Out of System Swing by Game") +
+  scale_fill_discrete(name = "Converted?")
+Convert_Games  
+```
+
+This plot tells me that UK is not the best at defending tips and out of system attacks. I can assume that Texas was very good at placing their tips, finding the weak spots on the Kentucky defense with their tips since that was the game with the worst conversions for UK. Most likely, Kentucky was not able to get kills off of these balls because they were not able to get a good touch on defense. This is important because these are easy points for the opponent. On the other hand, UK does well at converting when given a freeball. This is the easiest ball a team can receive and it is important to take advantage of those balls. 
+
+### Plot of Total Kills off Serve Receive 
+```{r}
+SR <- volleyball %>%
+  select(SR_Score, Kills_SR) %>%
+  ggplot(aes(x = SR_Score, fill = Kills_SR)) +
+  geom_bar(position = 'dodge') +
+  theme_bw() +
+  labs(x = "Serve Recieve Score",
+       y = "Total Swings",
+       title = "Kills Based on Serve Recieve Passing Scores") +
+  scale_fill_discrete(name = "Kill?")
+
+SR_plot <- ggplotly(SR)
+SR_plot
+```
+
+Based no the percentages I was able to find becasue of this graph, it is obvious that Kentucky is more likely to get a kill off a perfect pass in serve receive. This makes sense. The better the pass, the easier it will be to convert into a kill. I suggest Kentucky works on their shots when the ball is not perfect. 
+
+### Plot of Total Kills off Digs
+```{r}
+Dig <- volleyball %>%
+  select(Dig_Score, Kills_Dig) %>%
+  drop_na(Dig_Score, Kills_Dig) %>%
+  ggplot(aes(x = Dig_Score, fill = Kills_Dig)) +
+  geom_bar(position = 'dodge') +
+  theme_bw() +
+  labs(x = "Dig Score",
+       y = "Total Swings",
+       title = "Kills Based on Dig Scores") +
+  scale_fill_discrete(name = "Kill?")
+
+Dig_plot <- ggplotly(Dig)
+Dig_plot
+```
+
+Once again, the numbers show that UK is more likely to score a kill off of a perfect dig. Kentucky needs to be able to produce more kills off of perfect passes. If they could out number the amount of balls that aren't kills with balls that are kills off of perfect passes, they will be even more successful.
+
+### Plot of Total Kills off Tips, Freeballs, and Out of System Balls
+```{r}
+Convert <- volleyball %>%
+  select(Type, Converted) %>%
+  drop_na(Type, Converted) %>%
+  ggplot(aes(x = Type, fill = Converted)) +
+  geom_bar(position = 'dodge') +
+  theme_bw() +
+  labs(x = "Type of Ball Given",
+       y = "Total Swings",
+       title = "Kills When Given a Freeball, Tip, or Out of System Swing") +
+  scale_fill_discrete(name = "Converted?")
+
+Convert_plot <- ggplotly(Convert)
+Convert_plot
+```
+
+The numbers from this plot show that Kentucky converts freeballs 50% of the time, which is good. They need to be better about converting tips and out of system swings into kills. The plot shows that Kentucky needs to get better at converting on the easy things. 
+
+### Questions that arose from the visualizations:
+### 1: What affect does the setter have on these numbers?
+#### In order to figure this out, I could construst another graph that scores the set instead of the pass so I could see if the quality of set affected whether the hitter gets a kill or not.
+### 2: Where on the court are other teams scoring most of their points with tips?
+#### This would be hard to do on my own, but I do know that Volleymetrics provides shot charts of matches as well, so I could look at that and see where the oppenents are finding their kills.
